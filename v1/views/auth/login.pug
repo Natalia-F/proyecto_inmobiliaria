@@ -1,0 +1,17 @@
+extends ../layout/index
+
+block contenido
+    div
+        img(src="/img/BienesRaices.png", alt="Logo de Bienes Raices", class="logo w-32 h-auto mx-auto")
+        h2.text-center.text-2xl.font-extrabold= pagina
+        .mt-5.mx-auto.max-w-md
+            .bg-white.py-4.px-4.shadow
+                form.space-y-5
+                    div 
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="email") Email
+                        input#email.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="ejemplo : juanperez@dominio.cl" type="email" name="email")
+                    div 
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Contraseña
+                        input#password.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="******" type="password" name="password")
+                    div 
+                        input(class="w-full bg-black hover:bg-gray-800 text-white font-bold py-3 cursor-pointer" value="Ingresar" type="submit" name="submit")

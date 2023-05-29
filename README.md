@@ -15,11 +15,11 @@ Para ver mi proyecto correctamente necesitaras de lo siguiente :
       
       Deberas crear un archivo con el nombre '.env' donde ira la conexion a la base de datos para ello copia y pega lo siguiente en el archivo recien creado.
       
-      BD_NAME= //Nombre de la base de datos
-      BD_USER= //Usuario
-      BD_PASS= //contraseña
-      BD_HOST= //si lo haces local solo pon localhost sino la url de tu base de datos
-      BD_PORT= //El puerto de la base de datos
+      BD_NAME= //Nombre de la base de datos.
+      BD_USER= //Usuario.
+      BD_PASS= //contraseña.
+      BD_HOST= //si lo haces local solo pon localhost sino la url de tu base de datos.
+      BD_PORT= //El puerto de la base de datos.
       
       Elimina los comentarios //. Luego del simbolo = pondras los datos de tu bd no es necesario que los pongas entre comillas debera quedar asi
       

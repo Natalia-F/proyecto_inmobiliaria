@@ -9,7 +9,7 @@ Para ver mi proyecto correctamente necesitaras de lo siguiente :
       
       Ejecuta.
                     
-        npm = install
+        npm install
              
    
       El comando npm install examinará la sección "dependencies" y la sección "devDependencies" del archivo package.json y buscará las versiones especificadas en       el registro de paquetes npm. Descargará esos paquetes y los instalará localmente en la carpeta node_modules del proyecto.

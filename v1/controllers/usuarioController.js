@@ -10,6 +10,10 @@ const fomularioRegistro = (req, res) => {
     })
 };
 
+const registrar = (req, res) => {
+    console.log(req.body)
+};
+
 const fomularioForgetPass = (req, res) => {
     res.render('auth/forget-password', {
        pagina : 'Recuperar Acceso' 
@@ -19,7 +23,8 @@ const fomularioForgetPass = (req, res) => {
 export {
     fomularioLogin,
     fomularioRegistro,
-    fomularioForgetPass
+    registrar,
+    fomularioForgetPass,
 }
 
 //simplificar la misma ruta '/' pero se diferencia en get y post

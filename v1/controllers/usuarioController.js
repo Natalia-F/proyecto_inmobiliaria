@@ -1,3 +1,7 @@
+import {check, validationResult} from 'express-validator'
+import Usuario from "../../models/Usuario.js";
+
+
 const fomularioLogin = (req, res) => {
     res.render('auth/login', {
         pagina : 'Iniciar Sesión'
@@ -10,8 +14,15 @@ const fomularioRegistro = (req, res) => {
     })
 };
 
-const registrar = (req, res) => {
-    console.log(req.body)
+const registrar = async (req, res) => {
+    //Validacion
+    await check('firstname').notEmpty().run(req)
+
+    let resultado = validationResult(req)
+    res.json(resultado.array())
+    
+    const usuario = await Usuario.create(req.body)
+    res.json(usuario)
 };
 
 const fomularioForgetPass = (req, res) => {

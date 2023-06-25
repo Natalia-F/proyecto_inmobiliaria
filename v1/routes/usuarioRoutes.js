@@ -8,6 +8,7 @@ router.get('/login', fomularioLogin);
 router.get('/registro', fomularioRegistro);
 router.post('/registro', registrar); //para enviar info
 
+
 router.get('/forget-password', fomularioForgetPass);
 
 

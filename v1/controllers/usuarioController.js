@@ -1,6 +1,7 @@
 import {check, validationResult} from 'express-validator'
 import User from "../../models/Usuario.js";
 import { generarId } from '../../helpers/tokens.js';
+import {emailRegistro} from '../../helpers/emails.js'
 
 const fomularioLogin = (req, res) => {
     res.render('auth/login', {
@@ -55,7 +56,7 @@ const registrar = async (req, res) => {
     }
     
     //Alamcenar usuario
-    await User.create({
+    const user = await User.create({
         firstname,
         lastname,
         email,
@@ -63,10 +64,17 @@ const registrar = async (req, res) => {
         token:generarId()
     })
 
+    //Enviar email de confirmacion
+    emailRegistro({
+        firstname: user.firstname,
+        email: user.email,
+        token: user.token    
+    })
+
     //Mostrar mensaje de confirmacion
     res.render('templates/mensaje',{
         pagina: 'Cuenta Creada Correctamente',
-        mensaje: 'Hemos enviado un email de confirmacion'
+        mensaje: 'Hemos enviado un email de confirmacion, revisa tu bandeja de entrada'
     })
 };
 

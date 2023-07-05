@@ -78,6 +78,27 @@ const registrar = async (req, res) => {
     })
 };
 
+//Funcion para comprobar cuenta
+const confirmarCuenta = async (req,res) =>{
+    const {token} = req.params
+    
+    //verificar token
+    const user = await User.findOne({where :{token}})
+
+    //confirmar la cuenta
+    console.log(user)
+    
+    if(!user){
+         //Mostrar mensaje de error
+        return res.render('templates/mensaje', {
+            pagina: 'Error Validar Cuenta',
+            mensaje: 'Hubo un error al confirmar tu cuenta, intenta nuevamente'
+        })
+    }
+    
+   
+}
+
 const fomularioForgetPass = (req, res) => {
     res.render('auth/forget-password', {
        pagina : 'Recuperar Acceso' 
@@ -88,16 +109,8 @@ export {
     fomularioLogin,
     fomularioRegistro,
     registrar,
+    confirmarCuenta,
     fomularioForgetPass,
 }
 
-//simplificar la misma ruta '/' pero se diferencia en get y post
-/*
-router.route('/')
-    .get(function(req,res){
-        res.json({msg : "Hola mundo con express"})
-    })
-    .post(function(req,res){
-        res.json({msg : "Hola mundo con express post"})
-    })
-*/
+

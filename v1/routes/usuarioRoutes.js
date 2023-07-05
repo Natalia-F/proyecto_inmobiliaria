@@ -1,12 +1,16 @@
 import express from 'express'
-import {fomularioLogin, fomularioRegistro, fomularioForgetPass, registrar} from '../controllers/usuarioController.js'
+import {fomularioLogin, fomularioRegistro, fomularioForgetPass, registrar, confirmarCuenta} from '../controllers/usuarioController.js'
 
 const router = express.Router();
 
 router.get('/login', fomularioLogin);
 
 router.get('/registro', fomularioRegistro);
-router.post('/registro', registrar); //para enviar info
+//para enviar datos de registro
+router.post('/registro', registrar); 
+
+//confirmar registro
+router.get('/confirmar/:token', confirmarCuenta)
 
 
 router.get('/forget-password', fomularioForgetPass);

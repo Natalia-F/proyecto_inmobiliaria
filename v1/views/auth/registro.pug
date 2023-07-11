@@ -12,6 +12,7 @@ block contenido
         .mt-5.mx-auto.max-w-md
             .bg-white.py-4.px-4.shadow
                 form.space-y-5(method="POST" action="/auth/registro" noValidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div 
                         label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="firstname") Nombre
                         input#firstname.w-full.px-3.py-1.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Ingresa tu primer nombre" type="text" name="firstname" value= usuario ? usuario.firstname : '')

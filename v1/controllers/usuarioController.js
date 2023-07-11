@@ -11,7 +11,8 @@ const fomularioLogin = (req, res) => {
 
 const fomularioRegistro = (req, res) => {
     res.render('auth/registro', {
-       pagina : 'Crear Cuenta' 
+       pagina : 'Crear Cuenta',
+       csrfToken : req.csrfToken() 
     })
 };
 
@@ -32,6 +33,7 @@ const registrar = async (req, res) => {
         //errores
         return res.render('auth/registro', {
             pagina : 'Crear Cuenta',
+            csrfToken : req.csrfToken(),
             errores : resultado.array(),
             usuario : {
                 firstname: firstname,
@@ -46,6 +48,7 @@ const registrar = async (req, res) => {
     if (existUser) {
         return res.render('auth/registro', {
             pagina : 'Crear Cuenta',
+            csrfToken : req.csrfToken(),
             errores : [{msg:'El email ya esta registrado'}],
             usuario : {
                 firstname: firstname,
@@ -85,18 +88,25 @@ const confirmarCuenta = async (req,res) =>{
     //verificar token
     const user = await User.findOne({where :{token}})
 
-    //confirmar la cuenta
-    console.log(user)
-    
     if(!user){
          //Mostrar mensaje de error
         return res.render('templates/mensaje', {
-            pagina: 'Error Validar Cuenta',
-            mensaje: 'Hubo un error al confirmar tu cuenta, intenta nuevamente'
+            pagina: 'Error al validar tu cuenta',
+            mensaje: 'Hubo un error al confirmar tu cuenta, intenta nuevamente',
+            error: true
         })
     }
     
-   
+    //confirmar cuenta
+    user.token = null
+    user.confirmed = true
+    await user.save()
+
+    return res.render('templates/mensaje', {
+        pagina: 'Verificacion exitosa',
+        mensaje: 'Hemos validado tu cuenta, accede a ella para continuar.'
+        
+    })
 }
 
 const fomularioForgetPass = (req, res) => {

@@ -1,7 +1,7 @@
 import {check, validationResult} from 'express-validator'
 import User from "../../models/Usuario.js";
 import { generarId } from '../../helpers/tokens.js';
-import {emailRegistro} from '../../helpers/emails.js'
+import {emailRegistro, emailForgetPass} from '../../helpers/emails.js'
 
 const fomularioLogin = (req, res) => {
     res.render('auth/login', {
@@ -111,8 +111,56 @@ const confirmarCuenta = async (req,res) =>{
 
 const fomularioForgetPass = (req, res) => {
     res.render('auth/forget-password', {
-       pagina : 'Recuperar Acceso' 
+        csrfToken : req.csrfToken(),
+        pagina : 'Recuperar Acceso' 
     })
+};
+
+const ForgetPass = async (req, res) => {
+    
+    await check('email').isEmail().withMessage('Escriba un email valido').run(req)
+
+    let resultado = validationResult(req)
+
+    if (!resultado.isEmpty()) {
+        res.render('auth/forget-password', {
+            csrfToken : req.csrfToken(),
+            pagina : 'Recuperar Acceso',
+            errores : resultado.array() 
+        })
+    }
+
+    //Buscar usuario
+    const {email} = req.body
+    const user = await User.findOne({where :{email}})
+    
+    if (!user) {
+        return res.render('templates/mensaje', {
+            pagina: 'Error al validar tu cuenta',
+            mensaje: 'Al parecer este email no se encuentra registrado.',
+            error: true
+        })
+    }
+
+    //generar nuevo token
+    user.token = generarId()
+    await user.save()
+    
+
+    //Enviar email de confirmacion
+    emailForgetPass({
+        firstname: user.firstname,
+        email: user.email,
+        token: user.token    
+    })
+
+    //Mostrar mensaje de confirmacion
+    res.render('templates/mensaje',{
+        pagina: 'Cuenta Recuperada Correctamente',
+        mensaje: 'Hemos enviado un email para recuperar tu cuenta, revisa tu bandeja de entrada'
+    })
+
+    
 };
 
 export {
@@ -121,6 +169,7 @@ export {
     registrar,
     confirmarCuenta,
     fomularioForgetPass,
+    ForgetPass
 }
 
 

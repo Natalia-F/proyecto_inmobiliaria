@@ -1,4 +1,5 @@
 import {check, validationResult} from 'express-validator'
+import bcrypt from 'bcrypt'
 import User from "../../models/Usuario.js";
 import { generarId } from '../../helpers/tokens.js';
 import {emailRegistro, emailForgetPass} from '../../helpers/emails.js'
@@ -116,7 +117,7 @@ const fomularioForgetPass = (req, res) => {
     })
 };
 
-const ForgetPass = async (req, res) => {
+const forgetPass = async (req, res) => {
     
     await check('email').isEmail().withMessage('Escriba un email valido').run(req)
 
@@ -163,13 +164,72 @@ const ForgetPass = async (req, res) => {
     
 };
 
+const tokenForgetPass = async (req,res) =>{
+    console.log('Token recibido:', req.params);
+    const {token} = req.params;
+    
+
+    const user = await User.findOne({where : {token}})
+    if (!user) {
+        return res.render('templates/mensaje', {
+            pagina: 'Error al validar tu cuenta',
+            mensaje: 'Hubo un error al validar la informacion, intenta nuevamente.',
+            error: true
+        })
+    }
+
+    //formulario modificar password
+    res.render('auth/reset-password',{
+        pagina : 'Reestablece tu passsword',
+        csrfToken : req.csrfToken()
+    })
+
+    
+}
+
+const newPassword = async (req,res) =>{
+    const {password} = req.body
+    await check('password').isLength({min: 8}).withMessage('la contraseña debe tener almenos 8 carecteres').run(req)
+    await check('password_confirm').equals(password).withMessage('Las contraseñas deben ser iguales').run(req)
+
+    let resultado = validationResult(req)
+    
+    //verificar que no este vacio
+    if (!resultado.isEmpty()) {
+        //errores
+        return res.render('auth/reset-password', {
+            pagina : 'Reestablece tu passsword',
+            csrfToken : req.csrfToken(),
+            errores : resultado.array()
+         })
+    }
+    console.log('hola')
+    const {token} = req.params;
+
+    const user = await User.findOne({where : {token}})
+
+    //hashear password y eliminar token
+    const salt = await bcrypt.genSalt(10)
+    user.password = await bcrypt.hash(user.password,salt)
+    user.token = null;
+
+    await user.save()
+
+    res.render('templates/mensaje',{
+        pagina: 'Contraseña Modificada',
+        mensaje: 'Se ha modificado tu contraseña correctamente'
+    })
+}
+
 export {
     fomularioLogin,
     fomularioRegistro,
     registrar,
     confirmarCuenta,
     fomularioForgetPass,
-    ForgetPass
+    forgetPass,
+    tokenForgetPass,
+    newPassword
 }
 
 
